@@ -2,9 +2,15 @@
 
 Reverse lookup HashMask from image
 
+## Setup
+
+```bash
+pip install pillow click imagehash
+```
+
 ## Usage
 
-```shell
+```bash
 $ python imagehashmasks.py sample.png
 https://www.thehashmasks.com/detail/16251
 ```
