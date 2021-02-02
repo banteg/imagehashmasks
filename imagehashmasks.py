@@ -1,7 +1,7 @@
 import csv
 
 import click
-from imagehash import ImageMultiHash, crop_resistant_hash, hex_to_hash, phash
+import imagehash
 from PIL import Image
 
 
@@ -10,10 +10,15 @@ from PIL import Image
 def main(path):
     masks = list(csv.DictReader(open("masks.csv")))
     im = Image.open(path)
-    sample = crop_resistant_hash(im, phash)
-    mask = min(masks, key=lambda x: ImageMultiHash([hex_to_hash(x["phash"])]) - sample)
-    index = (16384 - 10141 + int(mask["index"])) % 16384
-    print(f"{mask['url']}\nhttps://www.thehashmasks.com/detail/{index}")
+    sample = imagehash.crop_resistant_hash(im, imagehash.phash)
+    for mask in masks:
+        mask["phash"] = imagehash.ImageMultiHash([imagehash.hex_to_hash(mask["phash"])])
+        mask["diff"] = mask["phash"] - sample
+    min_diff = min(masks, key=lambda mask: mask["diff"])["diff"]
+    for mask in masks:
+        if mask["diff"] == min_diff:
+            index = (16384 - 10141 + int(mask["index"])) % 16384
+            print(f"https://www.thehashmasks.com/detail/{index}")
 
 
 if __name__ == "__main__":
