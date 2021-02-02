@@ -1,6 +1,6 @@
 # ImageHashMasks
 
-Reverse lookup HashMask from image
+Lookup Hashmask NFT index from a picture
 
 ## Setup
 
